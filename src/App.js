@@ -28,6 +28,7 @@ export default function App() {
 
   return (
     <ChakraProvider>
+      This is development branch
       <Page user={user} setLoggedIn={setLoggedIn}>
         {loggedIn ? (
           <Home />
