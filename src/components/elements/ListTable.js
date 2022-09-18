@@ -2,12 +2,8 @@ import {
   Center,
   Spinner,
   Table,
-  TableCaption,
   TableContainer,
   Tbody,
-  Td,
-  Text,
-  Tr,
 } from "@chakra-ui/react";
 import React from "react";
 import ListItem from "./ListItem";

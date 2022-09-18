@@ -52,7 +52,6 @@ function Home() {
       } else {
         // doc.data() will be undefined in this case
         setLoading(false);
-        console.log("No such document!");
       }
     } else setTimeout(getData, 200);
   };
