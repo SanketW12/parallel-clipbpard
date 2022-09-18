@@ -14,24 +14,26 @@ import {
   useBoolean,
   useToast,
 } from "@chakra-ui/react";
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Lock, User } from "react-feather";
-import { signIn } from "../../auth/auth";
+import { signIn, signUp } from "../../auth/auth";
 
 function Login({ setLoggedIn }) {
   const [flag, setFlag] = useBoolean();
   const [user, setUser] = useState();
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState();
+  const [showSignUp, setShowSignUp] = useState(false);
   const toast = useToast();
 
   const handleSignIn = () => {
-    setLoading(true);
     if (user?.email && user?.password) {
+      setError("");
+      setLoading(true);
       signIn(user.email, user.password)
         .then((userCredential) => {
-          const user = userCredential.user;
-          setUser(user);
+          // const user = userCredential.user;
+
           setLoggedIn(true);
           toast({
             title: "Logged In!",
@@ -52,8 +54,47 @@ function Login({ setLoggedIn }) {
           });
           setLoading(false);
         });
+    } else {
+      setError("*Please enter credentials");
     }
   };
+
+  function handleSignUp() {
+    if (user?.email && user?.password) {
+      setError("");
+      setLoading(true);
+      signUp(user.email, user.password)
+        .then((userCredential) => {
+          // Signed in
+          console.log(userCredential, "Signed in");
+          // const user = userCredential.user;
+          setLoggedIn(true);
+          toast({
+            title: "Account created!",
+            status: "success",
+            duration: 2000,
+            isClosable: true,
+          });
+          setLoading(false);
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(errorMessage);
+          console.log(error);
+
+          toast({
+            title: errorCode,
+            status: "error",
+            duration: 2000,
+            isClosable: true,
+          });
+          setLoading(false);
+        });
+    } else {
+      setError("*Please enter details");
+    }
+  }
 
   return (
     <Box w={["sm", "md"]} p={5} mt={5} borderWidth="1px" borderRadius={5}>
@@ -64,7 +105,7 @@ function Login({ setLoggedIn }) {
           fontWeight="semibold"
           fontSize="xl"
         >
-          Welcome
+          {showSignUp ? "Create an account" : "Welcome"}
         </Text>
 
         <FormControl>
@@ -106,18 +147,25 @@ function Login({ setLoggedIn }) {
             </InputRightElement>
           </InputGroup>
 
-          <FormHelperText textAlign="right">
-            <Link color="teal.500">forgot password?</Link>
-          </FormHelperText>
+          {!showSignUp && (
+            <FormHelperText textAlign="right">
+              <Link color="teal.500">forgot password?</Link>
+            </FormHelperText>
+          )}
+          <FormHelperText color="red">{error}</FormHelperText>
         </FormControl>
-        <Button isLoading={loading} onClick={handleSignIn} colorScheme="teal">
-          Login
+        <Button
+          isLoading={loading}
+          onClick={showSignUp ? handleSignUp : handleSignIn}
+          colorScheme="teal"
+        >
+          {showSignUp ? "Sign Up" : "Login"}
         </Button>
 
         <Center>
-          {`New to us?`}
-          <Link color="teal.500" href="#">
-            Sign Up
+          {showSignUp ? `Already a user? ` : `New to us? `}
+          <Link onClick={() => setShowSignUp(!showSignUp)} color="teal.500">
+            {showSignUp ? " Log In" : "Sign Up"}
           </Link>
         </Center>
       </Stack>

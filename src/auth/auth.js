@@ -4,25 +4,14 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import { auth, db } from "../firebase";
+import { auth } from "../firebase";
 
 const signIn = async (email, password) => {
   return await signInWithEmailAndPassword(auth, email, password);
 };
 
 const signUp = (email, password) => {
-  createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      // Signed in
-      console.log(userCredential, "Signed in");
-      const user = userCredential.user;
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.log(errorMessage);
-      // ..
-    });
+  return createUserWithEmailAndPassword(auth, email, password);
 };
 
 const checkIsLoggedIn = (callback) => {
