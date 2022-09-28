@@ -8,13 +8,19 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
+import { User } from "firebase/auth";
 import React from "react";
 import { logOut } from "../../auth/auth";
 
-const Header = ({ user, setLoggedIn }) => {
+interface HeaderProps {
+  user: User;
+  setLoggedIn: (state: boolean) => void;
+}
+
+const Header = ({ user, setLoggedIn }: HeaderProps) => {
   const handleToggle = () => (isOpen ? onClose() : onOpen());
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const btnRef = React.useRef();
+  const btnRef = React.useRef<any>();
   const toast = useToast();
 
   function handleLogout() {

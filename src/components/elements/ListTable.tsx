@@ -8,7 +8,12 @@ import {
 import React from "react";
 import ListItem from "./ListItem";
 
-function ListTable({ items, loading }) {
+interface TableListProps {
+  items: string[];
+  loading: boolean;
+}
+
+function ListTable({ items, loading }: TableListProps) {
   return (
     <TableContainer w={["sm", "md", "xl", "2xl"]}>
       <Table variant="striped" color="#319795">

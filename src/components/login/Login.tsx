@@ -18,12 +18,21 @@ import React, { useState } from "react";
 import { Lock, User } from "react-feather";
 import { signIn, signUp } from "../../auth/auth";
 
-function Login({ setLoggedIn }) {
+interface User {
+  email: string;
+  password: string;
+}
+
+interface LoginPageProps {
+  setLoggedIn: (state: boolean) => void;
+}
+
+function Login({ setLoggedIn }: LoginPageProps) {
   const [flag, setFlag] = useBoolean();
-  const [user, setUser] = useState();
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState();
-  const [showSignUp, setShowSignUp] = useState(false);
+  const [user, setUser] = useState<User>();
+  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>();
+  const [showSignUp, setShowSignUp] = useState<boolean>(false);
   const toast = useToast();
 
   const handleSignIn = () => {
@@ -118,7 +127,9 @@ function Login({ setLoggedIn }) {
             <Input
               required
               value={user?.email}
-              onChange={(e) => setUser({ ...user, email: e.target.value })}
+              onChange={(e) =>
+                setUser({ ...user, email: e.target.value } as User)
+              }
               focusBorderColor="teal.500"
               type="email"
               placeholder="email address"
@@ -135,7 +146,9 @@ function Login({ setLoggedIn }) {
             <Input
               required
               value={user?.password}
-              onChange={(e) => setUser({ ...user, password: e.target.value })}
+              onChange={(e) =>
+                setUser({ ...user, password: e.target.value } as User)
+              }
               focusBorderColor="teal.500"
               type={flag ? "text" : "password"}
               placeholder="Password"

@@ -7,17 +7,18 @@ import { auth } from "./firebase";
 import Page from "./components/common/Page";
 import { checkIsLoggedIn } from "./auth/auth";
 import { useEffect } from "react";
+import { User } from "firebase/auth";
 
 export default function App() {
-  const [user, setUser] = useState();
+  const [user, setUser] = useState<User>();
   const [loggedIn, setLoggedIn] = useState(false);
 
-  function checkUserLoggedIn(user) {
+  function checkUserLoggedIn(user: any) {
     if (user) {
       setUser(user);
       setLoggedIn(true);
     } else {
-      setUser();
+      setUser(user);
       setLoggedIn(false);
     }
   }
@@ -28,17 +29,8 @@ export default function App() {
 
   return (
     <ChakraProvider>
-      <Page user={user} setLoggedIn={setLoggedIn}>
-        {loggedIn ? (
-          <Home />
-        ) : (
-          <Login
-            user={user}
-            setUser={setUser}
-            loggedIn={loggedIn}
-            setLoggedIn={setLoggedIn}
-          />
-        )}
+      <Page user={user as User} setLoggedIn={setLoggedIn}>
+        {loggedIn ? <Home /> : <Login setLoggedIn={setLoggedIn} />}
       </Page>
     </ChakraProvider>
   );

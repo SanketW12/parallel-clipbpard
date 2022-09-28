@@ -1,9 +1,16 @@
 import { Box, Center } from "@chakra-ui/react";
+import { User } from "firebase/auth";
 import React from "react";
 import { Helmet } from "react-helmet";
 import Header from "./Header";
 
-function Page({ user, setLoggedIn, children }) {
+interface PageProps {
+  user: User;
+  setLoggedIn: (state: boolean) => void;
+  children: React.ReactNode;
+}
+
+function Page({ user, setLoggedIn, children }: PageProps) {
   return (
     <Box>
       <Helmet>

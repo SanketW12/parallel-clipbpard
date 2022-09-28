@@ -19,12 +19,12 @@ import { auth, db } from "../firebase";
 
 function Home() {
   const [items, setItems] = useState([]);
-  const [newItem, setNewItem] = useState();
-  const [loading, setLoading] = useState(false);
+  const [newItem, setNewItem] = useState<string>();
+  const [loading, setLoading] = useState<boolean>(false);
   const toast = useToast();
 
   const addData = () => {
-    setDoc(doc(db, "texts", auth?.currentUser?.uid), {
+    setDoc(doc(db, "texts", auth?.currentUser?.uid as string), {
       clipboardTexts: [newItem, ...items],
     }).then(() => {
       setNewItem("");
@@ -42,7 +42,7 @@ function Home() {
     const { currentUser } = auth;
     setLoading(true);
     if (currentUser) {
-      const docRef = await doc(db, "texts", auth?.currentUser?.uid);
+      const docRef = await doc(db, "texts", auth?.currentUser?.uid as string);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {

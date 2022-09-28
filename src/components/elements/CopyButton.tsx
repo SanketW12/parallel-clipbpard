@@ -1,7 +1,11 @@
 import { Button, useClipboard, useToast } from "@chakra-ui/react";
 import React from "react";
 
-function CopyButton({ text }) {
+interface CopyButtonProps {
+  text: string;
+}
+
+function CopyButton({ text }: CopyButtonProps) {
   const toast = useToast();
   const { hasCopied, onCopy } = useClipboard(text);
   return (
