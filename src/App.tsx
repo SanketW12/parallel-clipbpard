@@ -1,26 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import * as React from "react";
+import { ChakraProvider } from "@chakra-ui/react";
+import Login from "./components/login/Login";
+import { useState } from "react";
+import Home from "./pages/Home";
+import { auth } from "./firebase";
+import Page from "./components/common/Page";
+import { checkIsLoggedIn } from "./auth/auth";
+import { useEffect } from "react";
+import { User } from "firebase/auth";
 
-function App() {
+export default function App() {
+  const [user, setUser] = useState<User>();
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  function checkUserLoggedIn(user: any) {
+    if (user) {
+      setUser(user);
+      setLoggedIn(true);
+    } else {
+      setUser(user);
+      setLoggedIn(false);
+    }
+  }
+
+  useEffect(() => {
+    checkIsLoggedIn(checkUserLoggedIn);
+  }, [loggedIn]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ChakraProvider>
+      <Page user={user as User} setLoggedIn={setLoggedIn}>
+        {loggedIn ? <Home /> : <Login setLoggedIn={setLoggedIn} />}
+      </Page>
+    </ChakraProvider>
   );
 }
-
-export default App;
