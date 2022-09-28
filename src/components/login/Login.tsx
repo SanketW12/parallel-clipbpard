@@ -2,6 +2,8 @@ import {
   Box,
   Button,
   Center,
+  Divider,
+  Flex,
   FormControl,
   FormHelperText,
   Input,
@@ -9,6 +11,14 @@ import {
   InputLeftElement,
   InputRightElement,
   Link,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Spinner,
   Stack,
   Text,
   useBoolean,
@@ -16,6 +26,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { Lock, User } from "react-feather";
+import { QRScanner } from "react-scanned-qr";
 import { signIn, signUp } from "../../auth/auth";
 
 interface User {
@@ -33,6 +44,8 @@ function Login({ setLoggedIn }: LoginPageProps) {
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>();
   const [showSignUp, setShowSignUp] = useState<boolean>(false);
+  const [openScanner, setOpenScanner] = useState<boolean>(false);
+
   const toast = useToast();
 
   const handleSignIn = () => {
@@ -182,6 +195,54 @@ function Login({ setLoggedIn }: LoginPageProps) {
           </Link>
         </Center>
       </Stack>
+
+      <Flex align="center">
+        <Divider />
+        <Text
+          color="teal.700"
+          textAlign="center"
+          fontWeight="semibold"
+          fontSize="sm"
+          padding="2"
+        >
+          OR
+        </Text>
+        <Divider />
+      </Flex>
+      {openScanner ? (
+        <Modal
+          onClose={() => setOpenScanner(false)}
+          isOpen={openScanner}
+          motionPreset="slideInBottom"
+        >
+          <ModalOverlay />
+          <ModalContent width={["350px", "md"]}>
+            <ModalHeader>Scan QR</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Center>
+                <QRScanner
+                  loadingComponent={<Spinner color="teal" />}
+                  onScanned={(data) => {
+                    alert(JSON.stringify(data));
+                  }}
+                  onError={() => {}}
+                />
+              </Center>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+      ) : (
+        <Center>
+          <Button
+            onClick={() => setOpenScanner(true)}
+            colorScheme="teal"
+            variant="outline"
+          >
+            Scan QR
+          </Button>
+        </Center>
+      )}
     </Box>
   );
 }
