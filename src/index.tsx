@@ -5,7 +5,6 @@ import "./index.css";
 
 import reportWebVitals from "./reportWebVitals";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
-// import { QRCode, QRScanner } from "react-scanned-qr";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement

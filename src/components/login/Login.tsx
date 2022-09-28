@@ -2,6 +2,8 @@ import {
   Box,
   Button,
   Center,
+  Divider,
+  Flex,
   FormControl,
   FormHelperText,
   Input,
@@ -16,6 +18,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { Lock, User } from "react-feather";
+import { QRCode } from "react-scanned-qr";
 import { signIn, signUp } from "../../auth/auth";
 
 interface User {
@@ -106,8 +109,18 @@ function Login({ setLoggedIn }: LoginPageProps) {
   }
 
   return (
-    <Box w={["sm", "md"]} p={5} mt={5} borderWidth="1px" borderRadius={5}>
-      <Stack spacing={7}>
+    <Box
+      display="flex"
+      justifyContent="space-around"
+      alignItems="center"
+      flexWrap="wrap"
+      w={["sm", "sm", "2xl"]}
+      p={5}
+      mt={5}
+      borderWidth="1px"
+      borderRadius={5}
+    >
+      <Stack spacing={6}>
         <Text
           color="teal.700"
           textAlign="center"
@@ -181,6 +194,31 @@ function Login({ setLoggedIn }: LoginPageProps) {
             {showSignUp ? " Log In" : "Sign Up"}
           </Link>
         </Center>
+      </Stack>
+
+      <Stack spacing={3}>
+        <Flex align="center">
+          <Divider />
+
+          <Text
+            flexGrow="2"
+            color="teal.700"
+            textAlign="center"
+            fontWeight="semibold"
+            fontSize="md"
+          >
+            ORScan
+          </Text>
+
+          <Divider />
+        </Flex>
+        <QRCode
+          bgColor="#fcfcfc"
+          fgColor="teal"
+          onScanned={(data) => {}}
+          onError={() => {}}
+          value="sanket"
+        />
       </Stack>
     </Box>
   );
