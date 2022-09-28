@@ -215,7 +215,9 @@ function Login({ setLoggedIn }: LoginPageProps) {
         <QRCode
           bgColor="#fcfcfc"
           fgColor="teal"
-          onScanned={(data) => {}}
+          onScanned={(data) => {
+            alert(JSON.stringify(data));
+          }}
           onError={() => {}}
           value="sanket"
         />
