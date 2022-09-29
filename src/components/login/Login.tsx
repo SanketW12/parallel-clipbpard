@@ -216,7 +216,7 @@ function Login({ setLoggedIn }: LoginPageProps) {
           bgColor="#fcfcfc"
           fgColor="teal"
           onScanned={(data) => {
-            alert(JSON.stringify(data));
+            console.log(data);
           }}
           onError={() => {}}
           value="sanket"
