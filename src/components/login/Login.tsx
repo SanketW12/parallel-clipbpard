@@ -15,7 +15,6 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalOverlay,
   Spinner,
@@ -24,12 +23,12 @@ import {
   useBoolean,
   useToast,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Lock, User } from "react-feather";
 import { QRScanner } from "react-scanned-qr";
 import { signIn, signUp } from "../../auth/auth";
 
-interface User {
+interface UserCredential {
   email: string;
   password: string;
 }
@@ -40,7 +39,7 @@ interface LoginPageProps {
 
 function Login({ setLoggedIn }: LoginPageProps) {
   const [flag, setFlag] = useBoolean();
-  const [user, setUser] = useState<User>();
+  const [user, setUser] = useState<UserCredential>();
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>();
   const [showSignUp, setShowSignUp] = useState<boolean>(false);
@@ -81,41 +80,51 @@ function Login({ setLoggedIn }: LoginPageProps) {
     }
   };
 
+  function handleSignUpfn(user: UserCredential) {
+    signUp(user.email, user.password)
+      .then((userCredential) => {
+        // Signed in
+        console.log(userCredential, "Signed in");
+        // const user = userCredential.user;
+
+        setLoggedIn(true);
+        toast({
+          title: "Account created!",
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+        });
+        setLoading(false);
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+
+        console.log(errorMessage);
+        console.log(error);
+
+        toast({
+          title: errorCode,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
+        setLoading(false);
+      });
+  }
+
   function handleSignUp() {
     if (user?.email && user?.password) {
       setError("");
       setLoading(true);
-      signUp(user.email, user.password)
-        .then((userCredential) => {
-          // Signed in
-          console.log(userCredential, "Signed in");
-          // const user = userCredential.user;
-          setLoggedIn(true);
-          toast({
-            title: "Account created!",
-            status: "success",
-            duration: 2000,
-            isClosable: true,
-          });
-          setLoading(false);
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.log(errorMessage);
-          console.log(error);
-
-          toast({
-            title: errorCode,
-            status: "error",
-            duration: 2000,
-            isClosable: true,
-          });
-          setLoading(false);
-        });
+      handleSignUpfn(user);
     } else {
       setError("*Please enter details");
     }
+  }
+
+  function handleScan(data: { id: string; value: string }) {
+    handleSignUpfn({ email: `${data.id}@mail.com`, password: data.id });
   }
 
   return (
@@ -141,8 +150,9 @@ function Login({ setLoggedIn }: LoginPageProps) {
               required
               value={user?.email}
               onChange={(e) =>
-                setUser({ ...user, email: e.target.value } as User)
+                setUser({ ...user, email: e.target.value } as UserCredential)
               }
+              isDisabled={loading}
               focusBorderColor="teal.500"
               type="email"
               placeholder="email address"
@@ -160,14 +170,20 @@ function Login({ setLoggedIn }: LoginPageProps) {
               required
               value={user?.password}
               onChange={(e) =>
-                setUser({ ...user, password: e.target.value } as User)
+                setUser({ ...user, password: e.target.value } as UserCredential)
               }
+              isDisabled={loading}
               focusBorderColor="teal.500"
               type={flag ? "text" : "password"}
               placeholder="Password"
             />
             <InputRightElement width="4.5rem">
-              <Button h="1.75rem" size="sm" onClick={setFlag.toggle}>
+              <Button
+                isDisabled={loading}
+                h="1.75rem"
+                size="sm"
+                onClick={setFlag.toggle}
+              >
                 {flag ? "Hide" : "Show"}
               </Button>
             </InputRightElement>
@@ -224,7 +240,9 @@ function Login({ setLoggedIn }: LoginPageProps) {
                 <QRScanner
                   loadingComponent={<Spinner color="teal" />}
                   onScanned={(data) => {
-                    alert(JSON.stringify(data));
+                    handleScan(data);
+                    setLoading(true);
+                    setOpenScanner(false);
                   }}
                   onError={() => {}}
                 />
