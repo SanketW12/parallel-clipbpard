@@ -21,7 +21,12 @@ import { Lock, User } from "react-feather";
 import { QRCode } from "react-scanned-qr";
 import { signIn, signUp } from "../../auth/auth";
 
-interface User {
+interface ScanProps {
+  id: string;
+  value: string;
+}
+
+interface UserCredential {
   email: string;
   password: string;
 }
@@ -32,40 +37,44 @@ interface LoginPageProps {
 
 function Login({ setLoggedIn }: LoginPageProps) {
   const [flag, setFlag] = useBoolean();
-  const [user, setUser] = useState<User>();
+  const [user, setUser] = useState<UserCredential>();
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>();
   const [showSignUp, setShowSignUp] = useState<boolean>(false);
   const toast = useToast();
 
+  function handleSignInfn(user: UserCredential) {
+    signIn(user.email, user.password)
+      .then((userCredential) => {
+        // const user = userCredential.user;
+
+        setLoggedIn(true);
+        toast({
+          title: "Logged In!",
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+        });
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        const errorCode = error.code;
+        toast({
+          title: errorCode,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
+        setLoading(false);
+      });
+  }
+
   const handleSignIn = () => {
     if (user?.email && user?.password) {
       setError("");
       setLoading(true);
-      signIn(user.email, user.password)
-        .then((userCredential) => {
-          // const user = userCredential.user;
-
-          setLoggedIn(true);
-          toast({
-            title: "Logged In!",
-            status: "success",
-            duration: 2000,
-            isClosable: true,
-          });
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.log(error);
-          const errorCode = error.code;
-          toast({
-            title: errorCode,
-            status: "error",
-            duration: 2000,
-            isClosable: true,
-          });
-          setLoading(false);
-        });
+      handleSignInfn(user);
     } else {
       setError("*Please enter credentials");
     }
@@ -108,6 +117,13 @@ function Login({ setLoggedIn }: LoginPageProps) {
     }
   }
 
+  function handleScanned(data: ScanProps) {
+    setTimeout(
+      () => handleSignInfn({ email: `${data.id}@mail.com`, password: data.id }),
+      1000
+    );
+  }
+
   return (
     <Box
       display="flex"
@@ -141,8 +157,9 @@ function Login({ setLoggedIn }: LoginPageProps) {
               required
               value={user?.email}
               onChange={(e) =>
-                setUser({ ...user, email: e.target.value } as User)
+                setUser({ ...user, email: e.target.value } as UserCredential)
               }
+              isDisabled={loading}
               focusBorderColor="teal.500"
               type="email"
               placeholder="email address"
@@ -160,14 +177,20 @@ function Login({ setLoggedIn }: LoginPageProps) {
               required
               value={user?.password}
               onChange={(e) =>
-                setUser({ ...user, password: e.target.value } as User)
+                setUser({ ...user, password: e.target.value } as UserCredential)
               }
+              isDisabled={loading}
               focusBorderColor="teal.500"
               type={flag ? "text" : "password"}
               placeholder="Password"
             />
             <InputRightElement width="4.5rem">
-              <Button h="1.75rem" size="sm" onClick={setFlag.toggle}>
+              <Button
+                isDisabled={loading}
+                h="1.75rem"
+                size="sm"
+                onClick={setFlag.toggle}
+              >
                 {flag ? "Hide" : "Show"}
               </Button>
             </InputRightElement>
@@ -215,8 +238,9 @@ function Login({ setLoggedIn }: LoginPageProps) {
         <QRCode
           bgColor="#fcfcfc"
           fgColor="teal"
-          onScanned={(data) => {
-            console.log(data);
+          onScanned={(data: any) => {
+            setLoading(true);
+            handleScanned(data);
           }}
           onError={() => {}}
           value="sanket"
