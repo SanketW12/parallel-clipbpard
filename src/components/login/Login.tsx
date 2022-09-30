@@ -243,7 +243,8 @@ function Login({ setLoggedIn }: LoginPageProps) {
             handleScanned(data);
           }}
           onError={() => {}}
-          value="sanket"
+          value="Parallel clipboard"
+          size={240}
         />
       </Stack>
     </Box>
