@@ -235,7 +235,7 @@ function Login({ setLoggedIn }: LoginPageProps) {
           <ModalContent width={["350px", "md"]}>
             <ModalHeader>Scan QR</ModalHeader>
             <ModalCloseButton />
-            <ModalBody>
+            <ModalBody paddingBottom="20">
               <Center>
                 <QRScanner
                   loadingComponent={<Spinner color="teal" />}
