@@ -52,7 +52,7 @@ const Header = ({ user, setLoggedIn }: HeaderProps) => {
       align="center"
       justify="space-between"
       wrap="wrap"
-      padding={6}
+      padding={3}
       bg="teal.500"
       color="white"
       position="sticky"
@@ -61,7 +61,7 @@ const Header = ({ user, setLoggedIn }: HeaderProps) => {
     >
       <Flex align="center" mr={5}>
         <Box display="flex">
-          <Heading as="h6" size="lg">
+          <Heading as="h6" size="md">
             Parallel Clipboard
           </Heading>
         </Box>
