@@ -15,11 +15,7 @@ interface TableListProps {
 
 function ListTable({ items, loading }: TableListProps) {
   return (
-    <TableContainer
-      height="50vh"
-      overflowY={"scroll"}
-      w={["sm", "md", "xl", "2xl"]}
-    >
+    <TableContainer w={["sm", "md", "xl", "2xl"]}>
       <Table variant="striped" color="#319795">
         <Tbody>
           {loading ? (

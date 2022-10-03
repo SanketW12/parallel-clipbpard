@@ -12,12 +12,12 @@ interface PageProps {
 
 function Page({ user, setLoggedIn, children }: PageProps) {
   return (
-    <Box height="100vh" overflowY="hidden">
+    <Box>
       <Helmet>
         <title>Parallel Clipboard</title>
       </Helmet>
       <Header user={user} setLoggedIn={setLoggedIn} />
-      <Box px="2" py="4">
+      <Box height="100%" px="2" py="4">
         <Center display="flex" justifyContent="center">
           {children}
         </Center>
