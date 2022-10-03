@@ -61,7 +61,7 @@ function Home() {
   }, [auth]);
 
   return (
-    <Box>
+    <Box >
       <Stack spacing={3}>
         <Text
           color="teal.700"
