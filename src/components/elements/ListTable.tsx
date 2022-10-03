@@ -16,7 +16,7 @@ interface TableListProps {
 function ListTable({ items, loading }: TableListProps) {
   return (
     <TableContainer
-      height="50vh"
+      height="60vh"
       overflowY={"scroll"}
       w={["sm", "md", "xl", "2xl"]}
     >
