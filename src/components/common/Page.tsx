@@ -12,7 +12,7 @@ interface PageProps {
 
 function Page({ user, setLoggedIn, children }: PageProps) {
   return (
-    <Box height="100vh" overflowY="hidden">
+    <Box height="100vh" overflowY={user ? "hidden" : "scroll"}>
       <Helmet>
         <title>Parallel Clipboard</title>
       </Helmet>
